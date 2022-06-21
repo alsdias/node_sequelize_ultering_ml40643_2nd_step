@@ -44,7 +44,7 @@ const PgSeqlDB = require('./models/persistence/PgSeqlDB');
 createTable = false;
 populate = false;
 let pgSeqDB = new PgSeqlDB(createTable);
-// pgSeqDB.showConfig();
+pgSeqDB.showConfig();
 if (!createTable && populate) {
   pgSeqDB.populate();
 }

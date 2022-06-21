@@ -27,10 +27,9 @@ class PgSeqlDB {
         } else if (process.env.APP_ENV == 'test') {
             console.log('[INFO]: database configuration set to test environment.')
             return Dbconfig.test;
-        } else {
-            console.log('[WARN]: database configuration not defined, assuming default (dev): ' + Dbconfig.development.database);
-            return Dbconfig.development;
         }
+        console.log('[WARN]: database configuration not defined, assuming default (dev): ' + Dbconfig.development.database);
+        return Dbconfig.development;
     }
 
 
@@ -61,11 +60,16 @@ class PgSeqlDB {
 
     connection() {
         console.log('[INFO]: authenticating database: ' + this.dbconfig.database)
-        let sequelize = new Sequelize(this.dbconfig.database, this.dbconfig.username, this.dbconfig.password, {
-            dialect: this.dbconfig.dialect,
+        let sequelize = new Sequelize({
+            username: this.dbconfig.username,
+            password: this.dbconfig.password,
+            database: this.dbconfig.database,
+            host: this.dbconfig.host,
             port: this.dbconfig.port,
+            dialect: this.dbconfig.dialect
         });
-        sequelize.authenticate(this.dbconfig).then(function () {
+
+        sequelize.authenticate().then(function () {
             console.log('[INFO]: database authenticated');
         }, function (err) {
             console.log('[EXCP]: database authentication failed due to: ' + err)
